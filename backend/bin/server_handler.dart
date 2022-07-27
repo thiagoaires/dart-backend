@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
@@ -16,6 +18,18 @@ class ServeHandler {
       String? idade = req.url.queryParameters["idade"];
       return Response.ok("Nome: $nome idade: $idade");
     });
+
+    router.post("/login", (Request req) async {
+      var result = await req.readAsString();
+      var json = jsonDecode(result);
+      final user = json['login'];
+      final password = json['password'];
+      if (user == 'adm' && password == '123') {
+        return Response.ok("bem vindo $user");
+      }
+      return Response.forbidden("Acesso negado!");
+    });
+
     return router;
   }
 }
